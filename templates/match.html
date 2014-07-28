@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block browsertitle %} - Match{% endblock %}
+
+{% block title %} - Randomized Match.{% endblock %}
+
+{% block body %}
+
+<img src="{{ match['image'] }}">
+Name:{{ match['first_name'] + ' ' + match['last_name'] }}
+Batch: {{match['batch']['name'] }}
+{% if match['is_faculty'] %}
+Faculty Member
+{% endif %}
+
+{% endblock %}
+

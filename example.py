@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
 import os
+from datetime import datetime, date
 from functools import wraps
+from random import choice
 
 from flask import Flask, session, url_for, flash, redirect, request, render_template
-from flask_oauthlib.client import OAuth, OAuthException
+from flask_oauthlib.client import OAuth
+
 
 ## flask app and an oauth object  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
@@ -101,8 +104,46 @@ def index():
 def hippos(login=None):
     return render_template('hippos.html', login=login)
 
+class ApiError:
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+def str2date(text):
+    return datetime.strptime(text, "%Y-%m-%d").date()
+    
+def api_get(path):
+    req = auth.get(path)
+    if req.status == 200:
+        return req.data
+    else:
+        raise ApiError('api call failed with status code {0}'.format(req.status()))
+    
+def get_batches():
+    return api_get('batches')
+
+def get_active_batches(batches):
+        today = date.today()
+        return [b for b in batches if str2date(b['start_date']) <= today and today <= str2date(b['end_date'])]
+    
+def get_people(batch):
+    print(batch)
+    path = 'batches/{0}/people'.format(batch['id'])
+    return api_get(path)
+
+def current_hackerschoolers():
+    return [p for b in get_active_batches(get_batches()) for p in get_people(b)]
+    
+@app.route('/pairmatch')
+@protected
+def pairmatch(login=None):
+    match_candidates = [p for p in current_hackerschoolers() if p['email'] != login['email']]
+    match = choice(match_candidates)
+    return render_template('match.html', login=login, match=match)
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0')
-
+        
 # eof
