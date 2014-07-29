@@ -99,12 +99,7 @@ def logout():
 def index():
     return render_template('base.html', login=get_login())
 
-@app.route('/hippos')
-@protected
-def hippos(login=None):
-    return render_template('hippos.html', login=login)
-
-class ApiError:
+class ApiException(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):
@@ -118,7 +113,7 @@ def api_get(path):
     if req.status == 200:
         return req.data
     else:
-        raise ApiError('api call failed with status code {0}'.format(req.status()))
+        raise ApiException('api call failed with status code {0}'.format(req.status))
     
 def get_batches():
     return api_get('batches')
