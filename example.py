@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import os
-from datetime import datetime, date
+
 from functools import wraps
 from random import choice
-
 from flask import Flask, session, url_for, flash, redirect, request, render_template
 from flask_oauthlib.client import OAuth
+from hsapi import HSApi
 
 
 ## flask app and an oauth object  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
@@ -23,6 +23,8 @@ auth = OAuth(app).remote_app(
     , consumer_secret  = os.environ.get('CONSUMER_SECRET', None)
     , access_token_method='POST'
     )
+
+hsapi = HSApi(auth)
 
 ## internal auth mechanics ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
@@ -98,42 +100,11 @@ def logout():
 @app.route('/')
 def index():
     return render_template('base.html', login=get_login())
-
-class ApiException(Exception):
-    def __init__(self, value):
-        self.value = value
-    def __str__(self):
-        return repr(self.value)
-
-def str2date(text):
-    return datetime.strptime(text, "%Y-%m-%d").date()
-    
-def api_get(path):
-    req = auth.get(path)
-    if req.status == 200:
-        return req.data
-    else:
-        raise ApiException('api call failed with status code {0}'.format(req.status))
-    
-def get_batches():
-    return api_get('batches')
-
-def get_active_batches(batches):
-        today = date.today()
-        return [b for b in batches if str2date(b['start_date']) <= today and today <= str2date(b['end_date'])]
-    
-def get_people(batch):
-    print(batch)
-    path = 'batches/{0}/people'.format(batch['id'])
-    return api_get(path)
-
-def current_hackerschoolers():
-    return [p for b in get_active_batches(get_batches()) for p in get_people(b)]
     
 @app.route('/pairmatch')
 @protected
 def pairmatch(login=None):
-    match_candidates = [p for p in current_hackerschoolers() if p['email'] != login['email']]
+    match_candidates = [p for p in hsapi.active_batch_members() if p['email'] != login['email']]
     match = choice(match_candidates)
     return render_template('match.html', login=login, match=match)
 
