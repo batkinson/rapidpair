@@ -3,6 +3,7 @@
 import os
 import logging as log
 
+from datetime import datetime, timedelta
 from functools import wraps
 from random import choice
 from flask import Flask, session, url_for, flash, redirect, request, render_template
@@ -70,6 +71,12 @@ def oauth_authorized(resp):
         return redirect(url_for('index'))
     
     log.debug('oauth_authorized response %s', resp)
+    
+    token_expires = datetime.now() + timedelta(seconds=10)
+    
+    session['login']['token_expires'] = token_expires
+    
+    log.debug('token expires in %s seconds, or at %s', resp['expires_in'], token_expires)
     
     # now get their username
     me = auth.get('people/me')
