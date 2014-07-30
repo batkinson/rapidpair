@@ -18,6 +18,14 @@
       <li>{{ msg }}</li>
     {% endfor %}
   </ul>
+  
+ 
+    {% if login %}
+    Access Token: {{ login['oauth_token'][0] }}
+    Refresh Token: {{ login['oauth_token'][1] }}
+    Token Expires: {{ login['token_expires'] }}
+    {% endif %}
+
   {% block body %}
   {% endblock %}
 </div>

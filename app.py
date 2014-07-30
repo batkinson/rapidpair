@@ -32,12 +32,17 @@ def get_login():
     log.debug('retrieving login %s', login)
     return login
 
+def set_login(resp):
+    if not 'login' in session:
+        session['login'] = dict()
+    session['login']['oauth_token'] = (resp['access_token'], resp['refresh_token'])
+    session['login']['token_expires'] = datetime.now() + timedelta(seconds=10)
+
 @auth.tokengetter
 def get_token(token=None):
-    token = get_login()['oauth_token']
-    log.debug('retrieving token %s', token)
-    return token
-
+    login = get_login()
+    return login['oauth_token']
+    
 def protected(route):
     @wraps(route)
     def wrapper(*args, **kwargs):
@@ -62,7 +67,7 @@ def oauth_authorized(resp):
     try:
         # make a partial login session here, get the username later if this part works
         # keys into resp are probably different for different oauth providers, unfortunately
-        session['login'] = dict(oauth_token=(resp['access_token'], resp['refresh_token']))
+        set_login(resp)
     except TypeError as exc:
         flash('The login request was gracefully declined. (TypeError: %s)' % exc)
         return redirect(url_for('index'))
@@ -71,9 +76,7 @@ def oauth_authorized(resp):
         return redirect(url_for('index'))
     
     log.debug('oauth_authorized response %s', resp)
-    
     token_expires = datetime.now() + timedelta(seconds=10)
-    
     session['login']['token_expires'] = token_expires
     
     log.debug('token expires in %s seconds, or at %s', resp['expires_in'], token_expires)
@@ -108,6 +111,14 @@ def pairmatch(login=None):
     match_candidates = [p for p in hsapi.active_batch_members() if p['email'] != login['email']]
     match = choice(match_candidates)
     return render_template('match.html', login=login, match=match)
+
+@app.route('/refresh')
+@protected
+def refresh(login=None):
+    refresh_response = hsapi.refresh_token(get_token())
+    set_login(refresh_response)
+    return index()
+    
 
 if __name__ == '__main__':
     app.debug = True
