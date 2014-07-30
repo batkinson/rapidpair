@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import logging as log
 
 from functools import wraps
 from random import choice
@@ -8,8 +9,7 @@ from flask import Flask, session, url_for, flash, redirect, request, render_temp
 from flask_oauthlib.client import OAuth
 from hsapi import HSApi
 
-
-## flask app and an oauth object  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
+log.basicConfig(level=log.DEBUG)
 
 app = Flask(__name__)
 app.secret_key = 'dev secret key horses hippos misssspellings etc'
@@ -26,33 +26,24 @@ auth = OAuth(app).remote_app(
 
 hsapi = HSApi(auth)
 
-## internal auth mechanics ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
-
 def get_login():
-    # our internal function to retrieve login data
-    # knowledge of session['login'] is only in here, oauth_authorized, and logout
-    return session.get('login')
+    login =  session.get('login')
+    log.debug('retrieving login %s', login)
+    return login
 
 @auth.tokengetter
 def get_token(token=None):
-    # a decorated tokengetter function is required by the oauth module
-    return get_login()['oauth_token']
+    token = get_login()['oauth_token']
+    log.debug('retrieving token %s', token)
+    return token
 
 def protected(route):
-    # in large apps it is probably better to use the Flask-Login extension than
-    # this route decorator because this decorator doesn't provide you with
-    # 1. user access levels or
-    # 2. the helpful abstraction of an "anonymous" user (not yet logged in)
     @wraps(route)
     def wrapper(*args, **kwargs):
         kwargs.update(login=get_login())
         return route(*args, **kwargs) if kwargs['login'] \
             else redirect(url_for('login', next=request.url))
-        # redirect includes "next=request.url" so that after logging in the
-        # user will be sent to the page they were trying to access
     return wrapper
-
-## external auth mechanics  ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
 @app.route('/login')
 def login():
