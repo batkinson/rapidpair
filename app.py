@@ -27,7 +27,7 @@ auth = OAuth(app).remote_app(
 hsapi = HSApi(auth)
 
 def get_login():
-    login =  session.get('login')
+    login = session.get('login')
     log.debug('retrieving login %s', login)
     return login
 
@@ -68,6 +68,9 @@ def oauth_authorized(resp):
     except KeyError as exc:
         flash('There was a problem with the response dictionary. (KeyError: %s) %s' % (exc, resp))
         return redirect(url_for('index'))
+    
+    log.debug('oauth_authorized response %s', resp)
+    
     # now get their username
     me = auth.get('people/me')
     if me.status == 200:
