@@ -117,8 +117,8 @@ def pairmatch(login=None):
 def refresh(login=None):
     refresh_response = hsapi.refresh_token(get_token())
     set_login(refresh_response)
-    return index()
-    
+    return render_template('refresh.html', login=login)
+
 
 if __name__ == '__main__':
     app.debug = True
