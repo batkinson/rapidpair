@@ -6,10 +6,10 @@
 
 {% block body %}
 
-<img src="{{ match['image'] }}">
-Name:{{ match['first_name'] + ' ' + match['last_name'] }}
-Batch: {{match['batch']['name'] }}
-{% if match['is_faculty'] %}
+<img src="{{ match['image'] }}"><br>
+Name: {{ match['first_name'] + ' ' + match['last_name'] }}<br>
+Batch: {{match['batch']['name'] }}<br>
+{% if match['is_faculty'] %}<br>
 Faculty Member
 {% endif %}
 

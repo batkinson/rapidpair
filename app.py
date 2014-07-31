@@ -105,7 +105,7 @@ def logout():
 def index():
     return render_template('base.html', login=get_login())
     
-@app.route('/pairmatch')
+@app.route('/match')
 @protected
 def pairmatch(login=None):
     match_candidates = [p for p in hsapi.active_batch_members() if p['email'] != login['email']]
@@ -123,5 +123,4 @@ def refresh(login=None):
 if __name__ == '__main__':
     app.debug = True
     app.run(host='0.0.0.0')
-        
-# eof
+

@@ -10,14 +10,18 @@
     {% if login.image %}
       <img src="{{ login.image }}" class="icon" />
     {% endif %}
+    | <a href="{{ url_for('pairmatch') }}">Match Me!</a> 
+    | <a href="{{ url_for('refresh') }}">OAuth Refresh</a>
   {% endif %}
   <hr />
+  
   <h1>{% block title %}{% endblock %}</h1>
   <ul>
     {% for msg in get_flashed_messages() %}
       <li>{{ msg }}</li>
     {% endfor %}
   </ul>
+  
   {% block body %}
   {% endblock %}
 </div>
