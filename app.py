@@ -8,7 +8,7 @@ from functools import wraps
 from random import choice
 from flask import Flask, session, url_for, flash, redirect, request, render_template
 from flask_oauthlib.client import OAuth
-from hsapi import HSApi
+from hsapi import HSApi, ApiException
 
 log.basicConfig(level=log.DEBUG)
 
@@ -118,6 +118,11 @@ def refresh(login=None):
     refresh_response = hsapi.refresh_token(get_token())
     set_login(refresh_response)
     return render_template('refresh.html', login=login)
+
+@app.errorhandler(ApiException)
+def handle_api_excepion(error):
+    session.pop('login')
+    redirect(url_for('login'))
 
 
 if __name__ == '__main__':

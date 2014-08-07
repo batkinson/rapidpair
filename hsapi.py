@@ -7,10 +7,11 @@ def str2date(text):
         
 class ApiException(Exception):
 
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, msg='', code=None):
+        self.msg = msg
+        self.code = code
     def __str__(self):
-        return repr(self.value)
+        return repr(self.msg)
 
 
 class HSApi:
@@ -23,14 +24,20 @@ class HSApi:
         if req.status == 200:
             return req.data
         else:
-            raise ApiException('api call failed with status code {0}'.format(req.status))
+            HSApi.raise_error(req)
         
     def post(self, *args, **kwargs):
         req = self._remapp.post(*args, **kwargs)
         if req.status == 200:
             return req.data
         else:
-            raise ApiException('api call failed with status code {0}'.format(req.status))
+            HSApi.raise_error(req)
+
+    @staticmethod
+    def raise_error(rsp):
+        raise ApiException(
+            'api call failed with status code {0}'.format(rsp.status),
+            rsp.status)
     
     def batches(self):
         return self.get('batches')
