@@ -121,8 +121,13 @@ def refresh(login=None):
 
 @app.errorhandler(ApiException)
 def handle_api_excepion(error):
-    session.pop('login')
-    redirect(url_for('login'))
+    if error.code == 401:
+        flash("Unable to use hackerschool api, forcing re-authentication.")
+        session.pop('login')
+        return redirect(url_for('login'))
+    flash("There was a problem using the hacker school api: %s" % error.msg)
+    return redirect(url_for('index'))
+
 
 
 if __name__ == '__main__':
