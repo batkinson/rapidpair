@@ -86,6 +86,8 @@ def oauth_authorized(resp):
         session['login']['user'] = '{first_name} {last_name}'.format(**my_data)
         session['login']['email'] = my_data['email']
         session['login']['image'] = my_data['image']
+        session['login']['batch'] = my_data['batch']['name']
+        session['login']['is_faculty'] = my_data['is_faculty']
     except ApiException:
         session['login']['user'] = 'Hacker Schooler'
  
