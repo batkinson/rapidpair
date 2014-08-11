@@ -42,6 +42,9 @@ class HSApi:
     def batches(self):
         return self.get('batches')
 
+    def me(self):
+        return self.get('people/me')
+
     def active_batches(self):
         today = date.today()
         return [b for b in self.batches() if str2date(b['start_date']) <= today and today <= str2date(b['end_date'])]

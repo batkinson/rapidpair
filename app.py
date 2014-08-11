@@ -81,14 +81,14 @@ def oauth_authorized(resp):
     
     log.debug('token expires in %s seconds, or at %s', resp['expires_in'], token_expires)
     
-    # now get their username
-    me = auth.get('people/me')
-    if me.status == 200:
-        session['login']['user'] = '{first_name} {last_name}'.format(**me.data)
-        session['login']['email'] = me.data['email']
-        session['login']['image'] = me.data['image']
-    else:
+    try :
+        my_data = hsapi.me()
+        session['login']['user'] = '{first_name} {last_name}'.format(**my_data)
+        session['login']['email'] = my_data['email']
+        session['login']['image'] = my_data['image']
+    except ApiException:
         session['login']['user'] = 'Hacker Schooler'
+ 
     flash('You are logged in.')
     return redirect(request.args.get('next') or url_for('index'))
 
