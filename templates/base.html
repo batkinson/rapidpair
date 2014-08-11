@@ -3,15 +3,14 @@
 <style>img.icon { max-width:1em; max-height:1em; width:auto; height:auto; vertical-align:bottom; }</style>
 <div>
   <a href="{{ url_for('index')  }}">Home</a> |
-  <a href="{{ url_for('login')  }}">Log In</a> |
-  <a href="{{ url_for('logout') }}">Log Out</a>
   {% if login %}
-    | Welcome, {{ login.user }}
+    Welcome, {{ login.user }}
     {% if login.image %}
       <img src="{{ login.image }}" class="icon" />
     {% endif %}
-    | <a href="{{ url_for('pairmatch') }}">Match Me!</a> 
-    | <a href="{{ url_for('refresh') }}">OAuth Refresh</a>
+    | <a href="{{ url_for('logout') }}">Log Out</a>
+  {% else %}
+    <a href="{{ url_for('login')  }}">Log In</a>
   {% endif %}
   <hr />
   

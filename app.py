@@ -112,13 +112,6 @@ def pairmatch(login=None):
     match = choice(match_candidates)
     return render_template('match.html', login=login, match=match)
 
-@app.route('/refresh')
-@protected
-def refresh(login=None):
-    refresh_response = hsapi.refresh_token(get_token())
-    set_login(refresh_response)
-    return render_template('refresh.html', login=login)
-
 @app.errorhandler(ApiException)
 def handle_api_excepion(error):
     if error.code == 401:
@@ -127,8 +120,6 @@ def handle_api_excepion(error):
         return redirect(url_for('login'))
     flash("There was a problem using the hacker school api: %s" % error.msg)
     return redirect(url_for('index'))
-
-
 
 if __name__ == '__main__':
     app.debug = True
