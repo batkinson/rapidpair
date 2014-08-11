@@ -28,19 +28,17 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
     <div class="container">
-    
+           
       <div class="header">
-        <ul class="nav nav-pills pull-right">
-          {% if login %}
-            Welcome, {{ login.user }}
-            {% if login.image %}
-              <img src="{{ login.image }}" class="icon" />
-            {% endif %}
-            | <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-          {% else %}
-            <li><a href="{{ url_for('login')  }}">Login</a></li>
-          {% endif %}
-        </ul>
+        {% if login %}
+            <ul class="nav nav-pills pull-right">
+              <li><a href="{{ url_for('logout') }}">Log Out</a>
+            </ul>
+        {% else %}
+          <ul class="nav nav-pills pull-right">
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+          </ul>
+        {% endif %}
         <h3 class="text-muted">Rapid Pair</h3>
       </div>
       
