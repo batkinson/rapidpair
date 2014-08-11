@@ -105,7 +105,7 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('base.html', login=get_login())
+    return render_template('home.html', login=get_login())
     
 @app.route('/match')
 @protected

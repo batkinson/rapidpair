@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block browsertitle %}Home{% endblock %}
+
+
+{% block body %}
+
+<div class="jumbotron">
+  <h1>Stop Fishing.</h1>
+  <p class="lead">Quickly match-up with people who want to.</p>
+  <p><a class="btn btn-lg btn-success" href="{{ url_for('pairmatch') }}" role="button">Pair Me!</a></p>
+</div>
+
+{% endblock %}

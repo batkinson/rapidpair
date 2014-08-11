@@ -6,19 +6,20 @@
 
 {% block body %}
 
-<img src="{{ login['image'] }}"><br>
-  Name: {{ login['user'] }}<br>
-  Batch: {{ login['batch'] }}<br>
-{% if login['is_faculty'] %}<br>
-  Faculty Member
-{% endif %}
-
-<img src="{{ match['image'] }}"><br>
-  Name: {{ match['first_name'] + ' ' + match['last_name'] }}<br>
-  Batch: {{match['batch']['name'] }}<br>
-{% if match['is_faculty'] %}<br>
-  Faculty Member
-{% endif %}
+<div class="row">
+  <div class="col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-heading"><h3 class="panel-title">{{ login['user'] }}<br></h3></div>
+      <div class="panel-body"><img src="{{ login['image'] }}" class="img-thumbnail"></div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="panel panel-primary">
+      <div class="panel-heading"><h3 class="panel-title">{{ match['first_name'] + ' ' + match['last_name'] }}</h3></div>
+      <div class="panel-body"><img src="{{ match['image'] }}" class="img-thumbnail"></div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 

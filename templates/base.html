@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     
+    <link href="{{ url_for('static', filename='jumbotron-narrow.css') }}" rel="stylesheet">
+    
     <style>img.icon { max-width:1em; max-height:1em; width:auto; height:auto; vertical-align: middle; }</style>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -19,34 +21,42 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+  
   <body>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-    <div>
-      <a href="{{ url_for('index')  }}">Home</a> |
-      {% if login %}
-        Welcome, {{ login.user }}
-        {% if login.image %}
-          <img src="{{ login.image }}" class="icon" />
-        {% endif %}
-        | <a href="{{ url_for('logout') }}">Log Out</a>
-      {% else %}
-        <a href="{{ url_for('login')  }}">Log In</a>
-      {% endif %}
-      <hr />
-  
-      <h1>{% block title %}{% endblock %}</h1>
-      <ul>
-        {% for msg in get_flashed_messages() %}
-          <li>{{ msg }}</li>
-        {% endfor %}
-      </ul>
+    <div class="container">
     
-    {% block body %}
-    {% endblock %}
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          {% if login %}
+            Welcome, {{ login.user }}
+            {% if login.image %}
+              <img src="{{ login.image }}" class="icon" />
+            {% endif %}
+            | <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+          {% else %}
+            <li><a href="{{ url_for('login')  }}">Login</a></li>
+          {% endif %}
+        </ul>
+        <h3 class="text-muted">Rapid Pair</h3>
+      </div>
+      
+      {% for msg in get_flashed_messages() %}
+        <div class="alert alert-info" role="alert">{{ msg }}</div>
+      {% endfor %}
+      
+      <h1>{% block title %}{% endblock %}</h1>
+      
+      {% block body %}
+      {% endblock %}
+      
+      <div class="footer">
+        <p>&copy; Brent Atkinson 2014</p>
+      </div>
+
     </div>
   </body>
 </html>
