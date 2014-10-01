@@ -5,7 +5,8 @@ batch members. It was initially intended to make the process of finding a
 pairing partner a little less socially awkward. However, in the process of
 developing the initial prototype I discovered that despite having considerable
 experience developing servlet-based web applications, I was somewhat stumped by
-the simple task of refreshing an OAuth token on behalf of a user.
+the simple task of safely using a refresh token for a user without server-side
+sessions.
 
 Now that hacker school is essentially building/has built their own solution for
 this, I doubt this will ever be fully developed. However, it provided an
@@ -38,7 +39,6 @@ accidentally commit it):
 CONSUMER_KEY=<application-id from hackerschool.com>
 CONSUMER_SECRET=<application-secret from hackerschool.com>
 export CONSUMER_KEY CONSUMER_SECRET
-
 ```
 
 ## Running
