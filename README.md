@@ -14,8 +14,8 @@ excellent motif for digging into the internals of Flask and Werkzeug and
 learning the assumptions that web application frameworks make in the Python tool
 chain.
 
-![Front Page Screenshot](screenshots/front-page.png)
-![Match Page Screenshot](screenshots/match-page.png)
+![Front Page Screenshot](screenshots/front-page.png?raw=true)
+![Match Page Screenshot](screenshots/match-page.png?raw=true)
 
 ## Requirements
 
